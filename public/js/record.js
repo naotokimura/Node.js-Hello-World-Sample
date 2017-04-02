@@ -7,7 +7,7 @@ $(function(){
 		var localMediaStream = null;
 	    var localScriptProcessor = null;
 	    audioData = []; // 録音データ
-	
+	    
 	    var onAudioProcess = function(e) {
 	    	console.log("onAudioProcess");
 	    	var input = e.inputBuffer.getChannelData(0);
@@ -35,5 +35,6 @@ $(function(){
 	    			}
 	    	);
 	    };
+	startRecording();
 	});
 });
