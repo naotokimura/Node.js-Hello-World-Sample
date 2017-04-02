@@ -2,20 +2,37 @@
 $(function(){
 	//録音開始
 	$("#record").click(function(e){
- 		e.preventDefault();	
-		var bufferSize = 4096;
-		var mediaStreamSource = audioContext.createMediaStreamSource(stream);
-		var scriptProcessor = audioContext.createScriptProcessor(bufferSize, 1, 1);
-		mediaStreamSource.connect(scriptProcessor);
-		audioBufferArray = [];
-		scriptProcessor.onaudioprocess = function(event){
-			var channel = event.inputBuffer.getChannelData(0);
-			var buffer = new Float32Array(bufferSize);
-			for (var i = 0; i < bufferSize; i++) {
-				buffer[i] = channel[i];
-			}
-			audioBufferArray.push(buffer);
-		}
-		scriptProcessor.connect(audioContext.destination);
-	});	
+		console.log("record started");
+ 		e.preventDefault();
+		var localMediaStream = null;
+	    var localScriptProcessor = null;
+	    audioData = []; // 録音データ
+	
+	    var onAudioProcess = function(e) {
+	      var input = e.inputBuffer.getChannelData(0);
+	      var bufferData = new Float32Array(bufferSize);
+	      for (var i = 0; i < bufferSize; i++) {
+	        bufferData[i] = input[i];
+	      }
+	
+	      audioData.push(bufferData);
+	    };
+	    var startRecording = function() {
+	      navigator.getUserMedia(
+	        { audio: true },
+	        function(stream) {
+	          localMediaStream = stream;
+	          var scriptProcessor = audioContext.createScriptProcessor(bufferSize, 1, 1);
+	          localScriptProcessor = scriptProcessor;
+	          var mediastreamsource = audioContext.createMediaStreamSource(stream);
+	          mediastreamsource.connect(scriptProcessor);
+	          scriptProcessor.onaudioprocess = onAudioProcess;
+	          scriptProcessor.connect(audioContext.destination);
+	        },
+	        function(e) {
+	          console.log(e);
+	        }
+	      );
+	    };
+	});
 });
