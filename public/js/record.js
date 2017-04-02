@@ -19,6 +19,8 @@ $(function(){
 	    };
 	    var startRecording = function() {
 	    	console.log("startRecording");
+	    	//test
+	    	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
 	    	navigator.getUserMedia(
 	    			{ audio: true },
 	    			function(stream) {
